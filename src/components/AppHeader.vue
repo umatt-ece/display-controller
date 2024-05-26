@@ -13,6 +13,13 @@
       </h1>
     </div>
 
+    <!-- System Time -->
+    <div class="time-container">
+      <h1 class="umatt-text">
+        {{ systemTime }}
+      </h1>
+    </div>
+
     <!-- Navigation Bar -->
     <div class="navbar-container umatt-text">
       <router-link to="/" class="navbar-item">
@@ -43,6 +50,24 @@
 <script>
 export default {
   name: "AppHeader",
+  data() {
+    return {
+      systemTime: this.getCurrentTime()
+    }
+  },
+  mounted() {
+    this.updateTime();
+    setInterval(this.updateTime, 1000); // Update every second
+  },
+  methods: {
+    getCurrentTime() {
+      const now = new Date();
+      return now.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
+    },
+    updateTime() {
+      this.systemTime = this.getCurrentTime();
+    }
+  }
 }
 </script>
 
@@ -52,7 +77,7 @@ export default {
 .header-container {
   // grid properties
   display: grid;
-  grid-template-columns: 1fr 4fr 6fr 1fr;
+  grid-template-columns: 1fr 3fr 2fr 4fr 1fr; // Adjusted to add time container
   gap: 0 0;
   // color
   background-color: $headerBackground;
@@ -74,7 +99,19 @@ export default {
 /* header text styling */
 .header-text {
   // grid properties
-  grid-column: 2;
+  grid-column: 2; // Adjusted column
+  // margin & padding
+  margin: auto 10px auto 10px;
+}
+
+/* system time styling */
+.time-container {
+  // grid properties
+  grid-column: 3; // Adjusted column
+  // align content horizontally & vertically to the center
+  display: flex;
+  justify-content: center;
+  align-items: center;
   // margin & padding
   margin: auto 10px auto 10px;
 }
@@ -82,7 +119,7 @@ export default {
 /* top navigation (nav) bar styling */
 .navbar-container {
   // grid properties
-  grid-column: 3;
+  grid-column: 4; // Adjusted column
   // align content horizontally to the right
   display: flex;
   justify-content: flex-end;
@@ -118,7 +155,7 @@ export default {
 /* toggle-fullscreen button */
 .fullscreen-button {
   // grid properties
-  grid-column: 4;
+  grid-column: 5; // Adjusted column
   // margin & padding
   margin: auto 10px auto 10px;
   // image sizing

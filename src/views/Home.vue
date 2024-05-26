@@ -1,26 +1,15 @@
 <template>
   <div class="home-container">
-
     <!-- Primary Info --------------------------------------------->
     <div class="home-primary-grid home-primary-container">
       <!-- Speed Info -->
       <div class="home-primary-grid-item">
-        <span class="umatt-text speed-info">
-          {{ this.$store.state.speed }}
-        </span>
-        <span class="umatt-text speed-unit">
-          Km/Hr
-        </span>
+        <SpeedGauge :value="speed" :maxValue="200" />
       </div>
 
       <!-- Torque Info -->
       <div class="home-primary-grid-item">
-        <span class="umatt-text torque-info">
-          {{ this.$store.state.torque }}
-        </span>
-        <span class="umatt-text torque-unit">
-          RPM
-        </span>
+        <RPMGauge :value="torque" :maxValue="8000" />
       </div>
 
       <!-- Gear Info -->
@@ -36,59 +25,33 @@
     <div class="home-secondary-grid home-secondary-container">
       <!-- Engine Temperature Info -->
       <div class="home-secondary-grid-item">
-        <BasicInfo icon="temp-half.png" description="Oil Temperature" :value="this.$store.state.oilTemp" unit="°C" class="home-basic-info"/>
+        <!-- <BasicInfo icon="temp-half.png" description="Oil Temperature" :value="oilTemp" unit="°C" class="home-basic-info"/> -->
+        <TemperatureBar :value="oilTemp" :maxValue="120" :minValue="0" description="Oil Temperature" />
       </div>
 
       <!-- Engine Power Info -->
       <div class="home-secondary-grid-item">
-        <BasicInfo icon="engine-battery.png" description="Oil Pressure" :value="this.$store.state.oilPressure" unit="PSI" class="home-basic-info"/>
+        <!-- <BasicInfo icon="engine-battery.png" description="Oil Pressure" :value="oilPressure" unit="PSI" class="home-basic-info"/> -->
+        <TemperatureBar :value="oilPressure" :maxValue="120" :minValue="0" description="Oil Pressure" />
       </div>
-
-      <!-- Engine Speed Info -->
-      <div class="home-secondary-grid-item">
-        <BasicInfo icon="engine-belt.png" description="GSL Position" :value="this.$store.state.gslPosition" unit="°" class="home-basic-info"/>
-      </div>
-
-      <!-- Power Info -->
-<!--      <div class="home-secondary-grid-item">-->
-<!--        <BasicInfo icon="power-bolt.png" description="Power" :value="power" unit="V" class="home-basic-info"/>-->
-<!--      </div>-->
 
       <!-- Drive Hours Info -->
       <div class="home-secondary-grid-item">
         <BasicInfo icon="hourglass.png" description="Drive Hours" :value="driveHours" unit="Hr" class="home-basic-info"/>
       </div>
-
-      <!-- System Time Info -->
-      <div class="home-secondary-grid-item">
-        <BasicInfo icon="time.png" description="System Time" :value="systemTime" class="home-basic-info"/>
-      </div>
     </div>
-
   </div>
 </template>
 
 <script>
 import BasicInfo from "@/components/BasicInfo.vue";
+import RPMGauge from "@/components/RPMGauge.vue";
+import SpeedGauge from "@/components/SpeedGauge.vue";
+import TemperatureBar from "@/components/TemperatureBar.vue";
 
 export default {
   name: "UmattHome",
-  components: { BasicInfo },
-  data() {
-    return {
-      /* Primary Info */
-      speed: this.$store.state.speed,
-      torque: this.$store.state.torque,
-      gear: this.$store.state.gear,  // 0: 'park', 1: 'reverse', 2: 'neutral', 3: 'drive'
-      /* Secondary Info */
-      engineTemp: this.$store.state.engineTemp,
-      enginePower: this.$store.state.enginePower,
-      engineSpeed: this.$store.state.engineSpeed,
-      power: this.$store.state.power,
-      driveHours: this.$store.state.driveHours,
-      systemTime: this.$store.state.systemTime,
-    }
-  },
+  components: { BasicInfo, RPMGauge, SpeedGauge, TemperatureBar },
   computed: {
     GearText() {
       if (this.$store.state.gear === 0) {
@@ -103,6 +66,27 @@ export default {
         return ""
       }
     },
+    speed() {
+      return this.$store.state.speed;
+    },
+    torque() {
+      return this.$store.state.torque;
+    },
+    oilTemp() {
+      return this.$store.state.oilTemp;
+    },
+    oilPressure() {
+      return this.$store.state.oilPressure;
+    },
+    gslPosition() {
+      return this.$store.state.gslPosition;
+    },
+    driveHours() {
+      return this.$store.state.driveHours;
+    },
+    systemTime() {
+      return this.$store.state.systemTime;
+    }
   }
 }
 </script>
@@ -115,7 +99,7 @@ export default {
   // color
   background-color: $homeBackground;
   // border styling
-  border: 3px solid $infoBorder;
+  border: 0px solid $infoBorder;
   border-radius: 5px;
   // margin & padding
   margin: 10px;
@@ -125,7 +109,7 @@ export default {
   // color
   background-color: $homeBackground;
   // border styling
-  border: 3px solid $homeBorder;
+  border: 0px solid $homeBorder;
   border-radius: 5px;
   // size
   height: 38%;
@@ -152,7 +136,7 @@ export default {
 }
 .home-secondary-grid {
   display: grid;
-  grid-template-rows: 1fr 1fr 1fr 1fr 1fr 1fr;
+  grid-template-rows: 1fr 1fr 1fr;
   gap: 5px 5px;
 }
 .home-primary-grid-item {
